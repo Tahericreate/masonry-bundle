@@ -1,0 +1,40 @@
+<?php if ($this->objContents): ?>
+
+<?php if ($this->headline): ?>
+<<?= $this->hl ?>>
+    <?= $this->headline['value'] ?>
+</<?= $this->hl ?>>
+<?php endif; ?>
+<div  class="<?= $this->class ?> grid">
+    <div class="grid-sizer"></div>
+    <?php foreach (unserialize($this->objContents->multiSRC) as $allLink): ?>
+    <?php $objFileModel = \FilesModel::findByUuid($allLink); ?>
+    <div class="grid-item">
+    <a class="rte-popup" href="<?= $objFileModel->path ?>" target="_blank" rel="noopener" data-type="iframe">
+        <img src="<?= $objFileModel->path ?>" />
+    </a>
+    </div>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+
+
+<script>
+    $(".rte-popup").fancybox({
+        width: 640,
+        height: 400,
+        type: 'iframe'
+    });
+    // init Masonry
+    var $grid = $('.<?= $this->objWrapperStart->id?> .grid').masonry({
+        itemSelector: '.grid-item',
+        percentPosition: true,
+        columnWidth: '.grid-sizer'
+    });
+    // layout Masonry after each image loads
+    $grid.imagesLoaded().progress(function () {
+        $grid.masonry();
+    });
+
+</script>
